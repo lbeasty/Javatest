@@ -1,0 +1,27 @@
+package app;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+
+public class JavaServiceTest extends TestCase
+{
+    /**
+     * @param testName
+     */
+    public JavaServiceTest( String testName )
+    {
+        super( testName );
+    }
+
+    ...
+
+    public void testJavaService()
+                        {
+                        JavaService nops = new JavaService();
+                        assertTrue( nops.size() == 1);
+                        assertTrue(nops.getOp(0).getDesc().equals("plus"));
+                        assertTrue( nops.getOp(0).op(2,1) == 3);
+                    
+                        }
+}
