@@ -3,6 +3,9 @@ package app;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Hashtable;
+
+import java.util.Enumeration;
 
 import com.google.gson.Gson;
 
@@ -12,85 +15,135 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 
-class BaseRequest {
-  public String request;
-  public URL url;
-  public URLConnection connection;
+class BaseTransaction {
+  public String url;
+  public URLConnection connection = null;
 
-  public BaseRequest(String getURL, String getRequest, String stringToReverse)
+  public BaseTransaction(String getURL)
   {
-    request = getRequest;
-    url = new URL(getURL);
-    connection = url.openConnection();
-    connection.setDoOutput(true);
+    url = getURL;
+  }
+
+  public SetConnection()
+  {
+    URL urlURL = new URL(url);
+    URLConnection connection = urlURL.openConnection();
+  }
+
+  public WriteToStream(String getStringToSend)
+  {
     OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-    out.write("string=" + stringToReverse);
+    out.write(getStringToSend);
     out.close();
   }
-//   public StreamWriter(String stringToReverse)
-//   {
-//     OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-//     out.write("string=" + stringToReverse);
-//     out.close();
-//   }
 
-}
-
-class ValidateRequest extends BaseRequest {
-  public String valRequest;
- 
-  public ValidateRequest(String getURL, String getRequest, String getStringToReverse){
-    valRequest = checkRequest(getRequest);
-    super(getURL, getRequest, valRequest);
-  }
-
-  public String checkRequest(String getString){
-    String checkedRequest = getString;
-    return checkedRequest;
-  }		
-}
-
-class BaseResponse {
-  public Object response;
-  public URLConnection connection;
-//   public StringBuffer buffer;
-  public StringBuilder builder;
-
-  public BaseResponse(URLConnection getConnection)
+  public ReadFromStream()
   {
-    connection = getConnection;
     BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
     String inputLine;
-/*    buffer = new StringBuffer();
+    StringBuffer buffer = new StringBuffer();
     while ((inputLine = in.readLine()) != null) {
       buffer.append(inputLine);
-    }*/
-
-    builder = new StringBuilder();
-    while ((line = in.readLine()) != null)
-    {
-	builder.append(line + '\n');
     }
-    System.out.println(builder.toString());
-
     in.close();
-    response = buffer;
-    
+    return buffer.toString();
+  }
 
+}
+
+class BaseRequest {
+  public Hashtable hashtable;
+  public String url;
+  public String generatedUrl;
+
+  public BaseRequest(String getURL)
+  {
+    url = getURL;
+    hashtable = new Hashtable();
+  }
+  public AddKeyValue(String getKey, String getValue)
+  {
+    hashtable.put( getKey, getValue );
+  }
+  public GenerateUrl()
+  {
+    Set s=mp.entrySet();
+    Iterator it=s.iterator();
+    String str = "";
+    while(it.hasNext())
+    {
+      Map.Entry m =(Map.Entry)it.next();
+      String key=(String)m.getKey();
+      String value=(String)m.getValue();
+      str = str + key + "=" + value + "&";
+    }
+    generatedUrl = str;
   }
 }
 
-class ValidateResponse extends BaseResponse {
-  public Object valResponse;
- 
-  public ValidateRequest(URLConnection getConnection){
-    valRequest = checkRequest(getConnection);
-    super(valRequest);
-  }
+class ZipRequest extends BaseRequest {
+  public String zipcode;
+  public String url;
 
-  public String checkRequest(Object getRequest){
-    Object checkedRequest = getRequest;
-    return checkedRequest;
+  public ZipRequest(String getURL, String getZipcode)
+  {
+    url = getURL;
+    zipcode = ValidateZip(getZipcode);
+    super(url);
+    AddKeyValue("zipcode", getZipcode);
+  }
+  public ValidateZip(String getZipcode)
+  {
+    return getZipcode;
+  }
+}
+
+class CityStateRequest extends BaseRequest {
+  public String zipcode;
+  public String url;
+
+  public CityStateRequest(String getURL, String getCityState)
+  {
+    url = getURL;
+    city, state = ValidateCityState(getCityState);
+    super(url);
+    AddKeyValue("city", city);
+    AddKeyValue("state", state);
+  }
+  public ValidateCityState(String getCityState)
+  {
+    return getCityState;
+  }
+}
+
+
+class BaseResponse
+{
+  public String response;
+
+  public BaseResponse(String getResponse)
+  {
+    response = getResponse;
+  }
+}
+
+class JSONResponse extends BaseResponse
+{
+  public String jsonStringResponse;
+  public Object jsonClassMockup;
+
+  public JSONResponse(String getResponse, Object getJsonClassMockup)
+  {
+    jsonStringResponse = getResponse;
+    jsonClassMockup = getJsonClassMockup;
+  }
+  public ValidateJSONResponse ()
+  {    
+    jsonClassMockup values = new Gson().fromJson(getResponse, jsonClassMockup.class);
+//     for (int counter = 0; counter < values.getTrends().length; counter++) {
+//       System.out.println(trends.getTrends(counter));
+//     }
+    return values;
   }
 }
 
@@ -110,7 +163,7 @@ class Stores {
   }
 
   public String toString() {
-    return "Trends at " + as_of + ". Count: " + trends.length;
+    return "Count: " + storeDescription.length;
   }
 }
 
@@ -325,44 +378,24 @@ public class JavaSimpleApplication
   public static void main(String args[])
   {
 
-//   public static final String TWITTER_TRENDS_URL = "search.twitter.com/trends.json";
-    StringBuffer buffer = null;
     try {
-	String stringToReverse = URLEncoder.encode(args[0], "UTF-8");
+      String stringToReverse = URLEncoder.encode(args[1], "UTF-8");
+      ZipRequest zipRequest = ZipRequest(args[0], args[1]);
+      BaseTransaction trans = BaseTransaction(zipRequest.generatedUrl);
+      readString = trans.ReadFromStream();
+
+      JSONResponse resp = JSONResponse(readString, Stores);
+      Stores values = resp.ValidateJSONResponse();
+      for (int counter = 0; counter < values.getStoreDescription().length; counter++) {
+	System.out.println(values.getStoreDescription(counter));
+      }
 
 // https://services.macys.com:4443/store_locator?zipcode=94538
 // https://services.macys.com:4443/store_locator?state=ca&city=san%20francisco
 
-	URL url = new URL("");
-	URLConnection connection = url.openConnection();
-	connection.setDoOutput(true);
-
-	OutputStreamWriter out = new OutputStreamWriter(
-                              connection.getOutputStream());
-	out.write("string=" + stringToReverse);
-	out.close();
 
     } catch (IOException e) {
       e.printStackTrace();
-    }
-
-    StringBuffer buffer = null;
-    try {
-      URL url = new URL(TWITTER_TRENDS_URL);
-      BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-      String inputLine;
-      buffer = new StringBuffer();
-      while ((inputLine = in.readLine()) != null) {
-        buffer.append(inputLine);
-      }
-      in.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    TwitterTrends trends = new Gson().fromJson(buffer.toString(), TwitterTrends.class);
-    for (int counter = 0; counter < trends.getTrends().length; counter++) {
-      System.out.println(trends.getTrends(counter));
     }
   }
 }
