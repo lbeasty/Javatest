@@ -17,81 +17,81 @@ class BaseRequest {
   public URL url;
   public URLConnection connection;
 
-  public BaseRequest(String getURL, String getRequest)
+  public BaseRequest(String getURL, String getRequest, String stringToReverse)
   {
     request = getRequest;
     url = new URL(getURL);
     connection = url.openConnection();
     connection.setDoOutput(true);
-
-//       HttpURLConnection connection = null;
-//       OutputStreamWriter wr = null;
-//       BufferedReader rd  = null;
-//       StringBuilder sb = null;
-//       String line = null;
-//     
-//       URL serverAddress = null;
-//     
-//       try {
-//           serverAddress = new URL("http://localhost");
-//           //set up out communications stuff
-//           connection = null;
-//         
-//           //Set up the initial connection
-//           connection = (HttpURLConnection)serverAddress.openConnection();
-
-  }
-  public StreamWriter(String stringToReverse)
-  {
     OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
     out.write("string=" + stringToReverse);
     out.close();
   }
+//   public StreamWriter(String stringToReverse)
+//   {
+//     OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+//     out.write("string=" + stringToReverse);
+//     out.close();
+//   }
 
 }
 
 class ValidateRequest extends BaseRequest {
   public String valRequest;
  
-  public ValidateRequest(String getRequest){
+  public ValidateRequest(String getURL, String getRequest, String getStringToReverse){
     valRequest = checkRequest(getRequest);
-    super(valRequest);
+    super(getURL, getRequest, valRequest);
   }
 
-  public String checkRequest(String getRequest){
-    String checkedRequest = getRequest;
+  public String checkRequest(String getString){
+    String checkedRequest = getString;
     return checkedRequest;
   }		
 }
 
 class BaseResponse {
   public Object response;
+  public URLConnection connection;
+//   public StringBuffer buffer;
+  public StringBuilder builder;
 
-  public BaseResponse(Object szResponse)
+  public BaseResponse(URLConnection getConnection)
   {
-    response = szResponse;
-  }
-  public Object getResponse() {
-      return response;
-  }
-  public void setResponse(Object variable) {
-      this.response = variable;
-  }
+    connection = getConnection;
+    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    String inputLine;
+/*    buffer = new StringBuffer();
+    while ((inputLine = in.readLine()) != null) {
+      buffer.append(inputLine);
+    }*/
 
+    builder = new StringBuilder();
+    while ((line = in.readLine()) != null)
+    {
+	builder.append(line + '\n');
+    }
+    System.out.println(builder.toString());
+
+    in.close();
+    response = buffer;
+    
+
+  }
 }
 
 class ValidateResponse extends BaseResponse {
   public Object valResponse;
  
-  public ValidateRequest(Object getRequest){
-    valRequest = checkRequest(getRequest);
+  public ValidateRequest(URLConnection getConnection){
+    valRequest = checkRequest(getConnection);
     super(valRequest);
   }
 
   public String checkRequest(Object getRequest){
     Object checkedRequest = getRequest;
     return checkedRequest;
-  }		
+  }
 }
 
 class Stores {
