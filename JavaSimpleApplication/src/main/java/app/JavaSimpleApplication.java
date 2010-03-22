@@ -1,286 +1,381 @@
 package app;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Hashtable;
+import java.util.*;
 
-import java.util.Enumeration;
+// import com.google.gson.Gson;
+import com.google.gson.*;
 
-import com.google.gson.Gson;
+import java.net.*;
+import java.io.*;
+import java.lang.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+// import java.io.BufferedReader;
+// import java.io.IOException;
+// import java.io.InputStreamReader;
+// import java.net.URL;
 
 
-class BaseTransaction {
-  public String url;
-  public URLConnection connection = null;
+class BaseTransaction 
+{
+  public	String		url;
+  public	URLConnection	connection = null;
 
   public BaseTransaction(String getURL)
   {
-    url = getURL;
+    url	= getURL;
   }
 
-  public SetConnection()
+  public void SetConnection()
   {
-    URL urlURL = new URL(url);
-    URLConnection connection = urlURL.openConnection();
-  }
-
-  public WriteToStream(String getStringToSend)
-  {
-    OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-    out.write(getStringToSend);
-    out.close();
-  }
-
-  public ReadFromStream()
-  {
-    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-    String inputLine;
-    StringBuffer buffer = new StringBuffer();
-    while ((inputLine = in.readLine()) != null) {
-      buffer.append(inputLine);
+    URL	urlURL	= null;
+    try
+    {
+      urlURL	= new URL(url);
     }
-    in.close();
+    catch (MalformedURLException e)
+    {
+      e.printStackTrace();
+    }
+
+    try
+    {
+      connection	= urlURL.openConnection();
+    } 
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+
+  }
+
+  public void WriteToStream(String getStringToSend)
+  {
+    OutputStreamWriter	out	= null;
+    try
+    {
+      out	= new OutputStreamWriter(connection.getOutputStream());
+      out.write(getStringToSend);
+      out.close();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+  public String ReadFromStream()
+  {
+    StringBuffer	buffer	= null;
+    try
+    {
+      BufferedReader	in	= new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      String		inputLine;
+      buffer	= new StringBuffer();
+
+      while ((inputLine = in.readLine()) != null)
+      {
+	buffer.append(inputLine);
+      }
+
+      in.close();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+
     return buffer.toString();
   }
 
 }
 
-class BaseRequest {
-  public Hashtable hashtable;
-  public String url;
-  public String generatedUrl;
+class BaseRequest
+{
+  public	Hashtable	hashtable;
+  public	String		url;
+  public	String		generatedUrl;
 
   public BaseRequest(String getURL)
   {
-    url = getURL;
-    hashtable = new Hashtable();
+    url		= getURL;
+    hashtable	= new Hashtable();
   }
-  public AddKeyValue(String getKey, String getValue)
+
+  public void AddKeyValue(String getKey, String getValue)
   {
     hashtable.put( getKey, getValue );
   }
-  public GenerateUrl()
+
+  public void GenerateUrl()
   {
-    Set s=mp.entrySet();
-    Iterator it=s.iterator();
-    String str = "";
+    Set		s	= hashtable.entrySet();
+    Iterator	it	= s.iterator();
+    String	str	= "";
+
     while(it.hasNext())
     {
-      Map.Entry m =(Map.Entry)it.next();
-      String key=(String)m.getKey();
-      String value=(String)m.getValue();
-      str = str + key + "=" + value + "&";
+      Map.Entry	m =(Map.Entry)it.next();
+      String	key=(String)m.getKey();
+      String	value=(String)m.getValue();
+      str	= str + key + "=" + value + "&";
     }
-    generatedUrl = str;
+
+    generatedUrl	= str;
   }
 }
 
-class ZipRequest extends BaseRequest {
-  public String zipcode;
-  public String url;
+class ZipRequest extends BaseRequest
+{
+  public	String	zipcode;
+  public	String	url;
 
   public ZipRequest(String getURL, String getZipcode)
   {
-    url = getURL;
-    zipcode = ValidateZip(getZipcode);
-    super(url);
+    super(getURL);
+    url		= getURL;
+    zipcode	= ValidateZip(getZipcode);
     AddKeyValue("zipcode", getZipcode);
   }
-  public ValidateZip(String getZipcode)
+
+  public String ValidateZip(String getZipcode)
   {
     return getZipcode;
   }
 }
 
-class CityStateRequest extends BaseRequest {
-  public String zipcode;
-  public String url;
+class CityStateRequest extends BaseRequest
+{
+  public	String	city;
+  public	String	state;
+  public	String	url;
 
   public CityStateRequest(String getURL, String getCityState)
   {
-    url = getURL;
-    city, state = ValidateCityState(getCityState);
-    super(url);
+//     ArrayList arrayList = new ArrayList();
+    super(getURL);
+    url		= getURL;
+
+    ValidateCityState(getCityState);    
     AddKeyValue("city", city);
     AddKeyValue("state", state);
   }
-  public ValidateCityState(String getCityState)
+  public void ValidateCityState(String getCityState)
   {
-    return getCityState;
+    String [] temp	= null;
+    temp		= getCityState.split(",");
+    city		= temp[0];
+    state		= temp[1];
+
+//       String s3 = "Real  How To";
+//       String [] temp = null;
+//       temp = s3.split("\\s+");
+
+
+//  arrayList.add( new Integer(1) ); // adding value into ArrayList
   }
 }
 
 
 class BaseResponse
 {
-  public String response;
+  public	String	response;
 
   public BaseResponse(String getResponse)
   {
-    response = getResponse;
+    response	= getResponse;
   }
 }
 
-class JSONResponse extends BaseResponse
+// class JSONResponse extends BaseResponse
+// {
+//   public	String	jsonStringResponse;
+//   public	Object	jsonClassMockup;
+// 
+//   public JSONResponse(String getResponse, Object getJsonClassMockup)
+//   {
+//     jsonStringResponse	= getResponse;
+//     jsonClassMockup	= getJsonClassMockup;
+//   }
+// 
+//   public jsonClassMockup.getClass() ValidateJSONResponse ()
+//   {    
+//     jsonClassMockup.getClass().getName() values = new Gson().fromJson(jsonStringResponse, jsonClassMockupobj.getClass());
+// // .getName().class
+// //     for (int counter = 0; counter < values.getTrends().length; counter++) {
+// //       System.out.println(trends.getTrends(counter));
+// //     }
+//     return values;
+//   }
+// }
+
+class Stores
 {
-  public String jsonStringResponse;
-  public Object jsonClassMockup;
+  private	StoreDescription[]	storeDescription;
 
-  public JSONResponse(String getResponse, Object getJsonClassMockup)
+  public StoreDescription[] getStoreDescription()
   {
-    jsonStringResponse = getResponse;
-    jsonClassMockup = getJsonClassMockup;
-  }
-  public ValidateJSONResponse ()
-  {    
-    jsonClassMockup values = new Gson().fromJson(getResponse, jsonClassMockup.class);
-//     for (int counter = 0; counter < values.getTrends().length; counter++) {
-//       System.out.println(trends.getTrends(counter));
-//     }
-    return values;
-  }
-}
-
-class Stores {
-  private StoreDescription[] storeDescription;
-
-  public StoreDescription[] getStoreDescription() {
     return storeDescription;
   }
 
-  public StoreDescription getStoreDescription(int counter) {
+  public StoreDescription getStoreDescription(int counter)
+  {
     return storeDescription[counter];
   }
 
-  public void setStoreDescription(StoreDescription[] storeDescription) {
+  public void setStoreDescription(StoreDescription[] storeDescription)
+  {
     this.storeDescription = storeDescription;
   }
 
-  public String toString() {
+  public String toString()
+  {
     return "Count: " + storeDescription.length;
   }
 }
 
-class StoreDescription {
-  private int storeId;
-  private String storeName;
-  private String addressLine1;
-  private String addressLine2;
-  private String addrCity;
-  private String addrState;
-  private String addrCountryCode;
-  private int addrPostalCode;
-  private String addrPhoneNumber;
-  private StoreHours[] storeHours;
-  private StoreLocation[] storeLocation;
+class StoreDescription
+{
+  private int			storeId;
+  private String		storeName;
+  private String		addressLine1;
+  private String		addressLine2;
+  private String		addrCity;
+  private String		addrState;
+  private String		addrCountryCode;
+  private int			addrPostalCode;
+  private String		addrPhoneNumber;
+  private StoreHours[]		storeHours;
+  private StoreLocation[]	storeLocation;
 
-  public int getStoreId() {
+  public int getStoreId()
+  {
     return storeId;
   }
 
-  public void setStoreId(int storeId) {
+  public void setStoreId(int storeId)
+  {
     this.storeId = storeId;
   }
 
-  public String getStoreName() {
+  public String getStoreName()
+  {
     return storeName;
   }
 
-  public void setStoreName(String storeName) {
+  public void setStoreName(String storeName)
+  {
     this.storeName = storeName;
   }
 
-  public String getAddressLine1() {
+  public String getAddressLine1()
+  {
     return addressLine1;
   }
 
-  public void setAddressLine1(String addressLine1) {
+  public void setAddressLine1(String addressLine1)
+  {
     this.addressLine1 = addressLine1;
   }
 
-  public String getAddressLine2() {
+  public String getAddressLine2()
+  {
     return addressLine2;
   }
 
-  public void setAddressLine2(String addressLine2) {
+  public void setAddressLine2(String addressLine2)
+  {
     this.addressLine2 = addressLine2;
   }
 
-  public String getAddrCity() {
+  public String getAddrCity()
+  {
     return addrCity;
   }
 
-  public void setAddrCity(String addrCity) {
+  public void setAddrCity(String addrCity)
+  {
     this.addrCity = addrCity;
   }
 
-  public String getAddrState() {
+  public String getAddrState()
+  {
     return addrState;
   }
 
-  public void setAddrState(String addrState) {
+  public void setAddrState(String addrState)
+  {
     this.addrState = addrState;
   }
 
-  public String getAddrCountryCode() {
+  public String getAddrCountryCode()
+  {
     return addrCountryCode;
   }
 
-  public void setAddrCountryCode(String addrCountryCode) {
+  public void setAddrCountryCode(String addrCountryCode)
+  {
     this.addrCountryCode = addrCountryCode;
   }
 
-  public int getAddrPostalCode() {
+  public int getAddrPostalCode()
+  {
     return addrPostalCode;
   }
 
-  public void setAddrPostalCode(int addrPostalCode) {
+  public void setAddrPostalCode(int addrPostalCode)
+  {
     this.addrPostalCode = addrPostalCode;
   }
 
-  public String getAddrPhoneNumber() {
+  public String getAddrPhoneNumber()
+  {
     return addrPhoneNumber;
   }
 
-  public void setAddrPostalCode(String addrPhoneNumber) {
+  public void setAddrPostalCode(String addrPhoneNumber)
+  {
     this.addrPhoneNumber = addrPhoneNumber;
   }
 
-  public StoreHours[] getStoreHours() {
+  public StoreHours[] getStoreHours()
+  {
     return storeHours;
   }
 
-  public StoreHours getStoreHours(int counter) {
+  public StoreHours getStoreHours(int counter)
+  {
     return storeHours[counter];
   }
 
-  public void setStoreHours(StoreHours[] storeHours) {
+  public void setStoreHours(StoreHours[] storeHours)
+  {
     this.storeHours = storeHours;
   }
 
-  public StoreLocation[] getStoreLocation() {
+  public StoreLocation[] getStoreLocation()
+  {
     return storeLocation;
   }
 
-  public StoreLocation getStoreLocation(int counter) {
+  public StoreLocation getStoreLocation(int counter)
+  {
     return storeLocation[counter];
   }
 
-  public void setStoreLocation(StoreLocation[] storeLocation) {
+  public void setStoreLocation(StoreLocation[] storeLocation)
+  {
     this.storeLocation = storeLocation;
   }
 
-  public String toString() {
-    hours = ""
-    for (int counter = 0; counter < storeHours.getStoreHours().length; counter++) {
-      hours += storeHours.getStoreHours(counter) + "\n";
+  public String toString()
+  {
+    String	hours		= "";
+
+    for (int counter = 0; counter < getStoreHours().length; counter++)
+    {
+      hours += getStoreHours(counter) + "\n";
     }
+
     return "storeName: " + storeName + "; addressLine1: " + addressLine1 + "; addrCity: " + addrCity + "; addrState: " + addrState + "; hours: " + hours;
   }
 // storeHours
@@ -290,114 +385,112 @@ class StoreDescription {
     "storeLocation":
       [{"storeLatitude":37.527927,"storeLongitude":-122.004517}]
     }*/
- 
-//   public StoreDescription(
-// 			  int getStoreId,
-// 			  String getStoreName,
-// 			  String getAddressLine1,
-// 			  String getAddressLine2,
-// 			  String getAddrCity,
-// 			  String getAddrState,
-// 			  String getAddrCountryCode,
-// 			  int getAddrPostalCode,
-// 			  String getAddrPhoneNumber,
-// 			  List getStoreHours,
-// 			  List getStoreLocation,)
-//   {
-//     storeId = getStoreId;
-//     storeName = getStoreName;
-//     addressLine1 = getAddressLine1;
-//     addressLine2 = getAddressLine2;
-//     addrCity = getAddrCity;
-//     addrState = getAddrState;
-//     addrCountryCode = getAddrCountryCode;
-//     addrPostalCode = getAddrPostalCode;
-//     addrPhoneNumber = getAddrPhoneNumber;
-//     storeHours = getStoreHours;
-//     storeLocation = getStoreLocation;
-//   }
-    static class StoreHours {
-      private String storedate;
-      private String storeTime;
+  static class StoreHours
+  {
+      private	String	storedate;
+      private	String	storeTime;
 
-      public String getStoredate() {
+      public String getStoredate()
+      {
         return storedate;
       }
 
-      public void setStoredate(String storedate) {
+      public void setStoredate(String storedate)
+      {
         this.storedate = storedate;
       }
 
-      public String getStoreTime() {
+      public String getStoreTime()
+      {
         return storeTime;
       }
 
-      public void setStoreTime(String storeTime) {
+      public void setStoreTime(String storeTime)
+      {
         this.storeTime = storeTime;
       }
 
-      public String toString() {
+      public String toString()
+      {
         return "storeDate: " + storedate + "; storeTime: " + storeTime;
       }
     }
 
-    static class StoreLocation {
-      private String storeLatitude;
-      private String storeLongitude;
+    static class StoreLocation
+    {
+      private	String	storeLatitude;
+      private	String	storeLongitude;
 
-      public String getStoreLatitude() {
+      public String getStoreLatitude()
+      {
         return storeLatitude;
       }
 
-      public void setStoreLatitude(String storeLatitude) {
+      public void setStoreLatitude(String storeLatitude)
+      {
         this.storeLatitude = storeLatitude;
       }
 
-      public String getStoreLongitude() {
+      public String getStoreLongitude()
+      {
         return storeLongitude;
       }
 
-      public void setStoreLongitude(String storeLongitude) {
+      public void setStoreLongitude(String storeLongitude)
+      {
         this.storeLongitude = storeLongitude;
       }
-
     }
-
-
 }
 
 public class JavaSimpleApplication
 {
-  String szAppName;
+  public	String	szAppName;
 
   public JavaSimpleApplication()
   {
-    szAppName = new String("Simple Console Application");
+    szAppName	= new String("Simple Console Application");
   }
 
   public static void main(String args[])
   {
 
-    try {
-      String stringToReverse = URLEncoder.encode(args[1], "UTF-8");
-      ZipRequest zipRequest = ZipRequest(args[0], args[1]);
-      BaseTransaction trans = BaseTransaction(zipRequest.generatedUrl);
-      readString = trans.ReadFromStream();
+    try
+    {
+      String	stringToReverse	= URLEncoder.encode(args[1], "UTF-8");
 
-      JSONResponse resp = JSONResponse(readString, Stores);
-      Stores values = resp.ValidateJSONResponse();
-      for (int counter = 0; counter < values.getStoreDescription().length; counter++) {
+      BaseTransaction	trans	= null;
+      if (args[1].indexOf(",") != -1)
+      {
+	  CityStateRequest	request	= new CityStateRequest(args[0], args[1]);
+	  trans			= new BaseTransaction(request.generatedUrl);
+      } 
+      else
+      {
+	  ZipRequest		request	= new ZipRequest(args[0], args[1]);
+	  trans			= new BaseTransaction(request.generatedUrl);
+      }
+      
+      String	readString	= trans.ReadFromStream();
+
+      BaseResponse	resp	= new BaseResponse(readString);
+//       Stores		values	= resp.ValidateJSONResponse();
+
+      Stores values = new Gson().fromJson(resp.response, Stores.class);
+
+      for (int counter = 0; counter < values.getStoreDescription().length; counter++)
+      {
 	System.out.println(values.getStoreDescription(counter));
       }
-
 // https://services.macys.com:4443/store_locator?zipcode=94538
 // https://services.macys.com:4443/store_locator?state=ca&city=san%20francisco
-
-
-    } catch (IOException e) {
+    } 
+    catch (IOException e)
+    {
       e.printStackTrace();
     }
   }
+
 }
 
 
