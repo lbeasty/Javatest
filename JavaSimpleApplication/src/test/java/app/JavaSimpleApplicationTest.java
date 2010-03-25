@@ -4,6 +4,32 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+
+public class RegularExpressionTest {
+ private static String zipRegEx = "^\\d{5}([\\-]\\d{4})?$";
+ private static Pattern pattern;
+  
+ @BeforeClass
+ public static void setUpBeforeClass() throws Exception {
+  pattern = Pattern.compile(zipRegEx);
+ }
+
+ @Test
+ public void verifyZipCodeNoMatch() throws Exception{		 
+  Matcher mtcher = this.pattern.matcher("2211");
+  boolean notValid = mtcher.matches();		
+  assertFalse("Pattern did validate zip code", notValid);
+ }
+}
+
+
+
 public class JavaSimpleApplicationTest extends TestCase
 {
     /**
@@ -24,59 +50,3 @@ public class JavaSimpleApplicationTest extends TestCase
                     
                         }
 }
-/*
-
-public class MathFunc {
-    private int variable;
-
-    public MathFunc() {
-        variable = 0;
-    }
-    public MathFunc(int var) {
-        variable = var;
-    }
-
-    public int getVariable() {
-        return variable;
-    }
-    public void setVariable(int variable) {
-        this.variable = variable;
-    }
-
-    public long factorial() {
-        long result = 1;
-        if (variable > 1) {
-            for (int i=1; i<=variable; i++)
-                result = result*i;
-        }
-        return result;
-    }
-
-    public long plus(int var) {
-        long result = variable + var;
-        return result;
-    }
-}
-
-
-public class TestClass extends TestCase {
-    public TestClass(String testName) {
-        super(testName);
-    }
-
-    public void testFactorialNull() {
-        MathFunc math = new MathFunc();
-        assertTrue(math.factorial() == 1);
-    }
-
-    public void testFactorialPositive() {
-        MathFunc math = new MathFunc(5);
-        assertTrue(math.factorial() == 120);
-    }
-
-    public void testPlus() {
-        MathFunc math = new MathFunc(45);
-        assertTrue(math.plus(123) == 168);
-    }
-}*/
-
