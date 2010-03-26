@@ -11,22 +11,22 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 
-public class RegularExpressionTest {
- private static String zipRegEx = "^\\d{5}([\\-]\\d{4})?$";
- private static Pattern pattern;
-  
- @BeforeClass
- public static void setUpBeforeClass() throws Exception {
-  pattern = Pattern.compile(zipRegEx);
- }
-
- @Test
- public void verifyZipCodeNoMatch() throws Exception{		 
-  Matcher mtcher = this.pattern.matcher("2211");
-  boolean notValid = mtcher.matches();		
-  assertFalse("Pattern did validate zip code", notValid);
- }
-}
+// public class RegularExpressionTest {
+//  private static String zipRegEx = "^\\d{5}([\\-]\\d{4})?$";
+//  private static Pattern pattern;
+//   
+//  @BeforeClass
+//  public static void setUpBeforeClass() throws Exception {
+//   pattern = Pattern.compile(zipRegEx);
+//  }
+// 
+//  @Test
+//  public void verifyZipCodeNoMatch() throws Exception{		 
+//   Matcher mtcher = this.pattern.matcher("2211");
+//   boolean notValid = mtcher.matches();		
+//   assertFalse("Pattern did validate zip code", notValid);
+//  }
+// }
 
 
 

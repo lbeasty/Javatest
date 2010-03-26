@@ -23,24 +23,29 @@ public class JavaSimpleApplication
     szAppName	= new String("Simple Console Application");
   }
 
-  public static void main(String args[])
+  public BaseTransaction parseRequest (String url, String request) 
+  {
+      BaseTransaction	trans	= null;
+      if (request.indexOf(",") != -1)
+      {
+	  CityStateRequest	req	= new CityStateRequest(url, request);
+	  trans			= new BaseTransaction(req.generatedUrl);
+      } 
+      else
+      {
+	  ZipRequest		req	= new ZipRequest(url, request);
+	  trans			= new BaseTransaction(req.generatedUrl);
+      }
+      return trans;
+  }
+
+  public void main(String args[])
   {
 
     try
     {
       String	stringToReverse	= URLEncoder.encode(args[1], "UTF-8");
-
-      BaseTransaction	trans	= null;
-      if (args[1].indexOf(",") != -1)
-      {
-	  CityStateRequest	request	= new CityStateRequest(args[0], args[1]);
-	  trans			= new BaseTransaction(request.generatedUrl);
-      } 
-      else
-      {
-	  ZipRequest		request	= new ZipRequest(args[0], args[1]);
-	  trans			= new BaseTransaction(request.generatedUrl);
-      }
+      BaseTransaction	trans = parseRequest(args[0], args[1]);
       
       String	readString	= trans.readFromStream();
 
