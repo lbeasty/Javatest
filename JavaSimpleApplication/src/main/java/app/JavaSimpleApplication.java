@@ -16,12 +16,12 @@ import java.lang.*;
 
 public class JavaSimpleApplication
 {
-  public	String	szAppName;
-
-  public JavaSimpleApplication()
-  {
-    szAppName	= new String("Simple Console Application");
-  }
+//   public	String	szAppName;
+// 
+//   public JavaSimpleApplication()
+//   {
+//     szAppName	= new String("Simple Console Application");
+//   }
 
   public BaseTransaction parseRequest (String url, String request) 
   {
@@ -29,12 +29,12 @@ public class JavaSimpleApplication
       if (request.indexOf(",") != -1)
       {
 	  CityStateRequest	req	= new CityStateRequest(url, request);
-	  trans			= new BaseTransaction(req.generatedUrl);
+	  trans			= new BaseTransaction(req.generateUrl());
       } 
       else
       {
 	  ZipRequest		req	= new ZipRequest(url, request);
-	  trans			= new BaseTransaction(req.generatedUrl);
+	  trans			= new BaseTransaction(req.generateUrl());
       }
       return trans;
   }

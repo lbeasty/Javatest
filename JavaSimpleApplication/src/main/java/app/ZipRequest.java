@@ -17,16 +17,40 @@ import java.lang.*;
 
 public class ZipRequest extends BaseRequest
 {
-  public	String	zipcode;
-  public	String	url;
+  private	String	zipcode;
+  private	String	url;
 
-  public ZipRequest(String getURL, String getZipcode)
+  public ZipRequest(String url, String zipcode)
   {
-    super(getURL);
-    url		= getURL;
-    zipcode	= validateZip(getZipcode);
-    addKeyValue("zipcode", getZipcode);
+    super(url);
+
+    String	valZipcode	= validateZip(zipcode);
+
+    setUrl(url);
+    setZipcode(valZipcode);
+    addKeyValue("zipcode", valZipcode);
   }
+
+  public String getZipcode()
+  {
+    return zipcode;
+  }
+
+  public void setZipcode(String zipcode)
+  {
+    this.zipcode	= zipcode;
+  }
+
+  public String getUrl()
+  {
+    return url;
+  }
+
+  public void setUrl(String url)
+  {
+    this.url	= url;
+  }
+
 
   public String validateZip(String getZipcode)
   {

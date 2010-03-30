@@ -1,18 +1,6 @@
 package app;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
-
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
@@ -28,8 +16,8 @@ public class ZipRequestTest {
       String myURL = "http://www.google.ru";
       String zipcode = "ZIPCODE";
       ZipRequest request = new ZipRequest(myURL, zipcode);
-      assertThat(request.url, equalTo(myURL));
-      assertThat(request.zipcode, equalTo(zipcode));
+      assertThat(request.getUrl(), equalTo(myURL));
+      assertThat(request.getZipcode(), equalTo(zipcode));
     }
 
     @Test public void validateZip() {

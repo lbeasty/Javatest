@@ -1,15 +1,10 @@
 package app;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.assertFalse;
+import org.junit.*;
 
 // public class RegularExpressionTest {
 //  private static String zipRegEx = "^\\d{5}([\\-]\\d{4})?$";
@@ -29,24 +24,21 @@ import static org.junit.Assert.assertFalse;
 // }
 
 
-
-public class JavaSimpleApplicationTest extends TestCase
+// public class JavaSimpleApplicationTest extends TestCase
+public class JavaSimpleApplicationTest
 {
-    /**
-     * @param testName
-     */
-    public JavaSimpleApplicationTest( String testName )
-    {
-        super( testName );
+    @Test public void sendParserCityState() {
+      String url = "https://services.macys.com:4443/store_locator?";
+      String request = "San Francisco,CA";
+      JavaSimpleApplication app = new JavaSimpleApplication();
+      
+      BaseTransaction obj = app.parseRequest(url, request);
+      System.out.println(obj);
+      String tmp = obj.getUrl();
+//       Class cls = obj.class;
+//       System.out.println(tmp);
+      assertThat(tmp, equalTo("https://services.macys.com:4443/store_locator?state=CA&city=San Francisco&"));
     }
 
 
-    public void testJavaSimpleApplication()
-                        {
-                        JavaSimpleApplication nops = new JavaSimpleApplication();
-//                         assertTrue( nops.size() == 1);
-//                         assertTrue(nops.getOp(0).getDesc().equals("plus"));
-//                         assertTrue( nops.getOp(0).op(2,1) == 3);
-                    
-                        }
 }

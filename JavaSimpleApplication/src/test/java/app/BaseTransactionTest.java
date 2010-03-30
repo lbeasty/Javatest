@@ -1,22 +1,11 @@
 package app;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.*;
+
 
 public class BaseTransactionTest {
 
@@ -30,14 +19,15 @@ public class BaseTransactionTest {
     @Test public void callConstructor() {
       String myURL = "http://www.google.ru";
       BaseTransaction trans = new BaseTransaction(myURL);
-      assertThat(trans.url, equalTo(myURL));
+      assertThat(trans.getUrl(), equalTo(myURL));
     }
 
     @Test public void setConnectionToGoogle() {
       String myURL = "http://www.google.ru";
       BaseTransaction trans = new BaseTransaction(myURL);
       trans.setConnection();
-      assertNotNull(trans.setConnection(trans.connection));
+      assertThat(trans.getConnection(), equalTo(null));
+//       assertNotNull(trans.connection);
     }
 
     @Test public void writeToStreamConnection() {
@@ -56,7 +46,7 @@ public class BaseTransactionTest {
       trans.setConnection();
       String stringToSend = "string=!!!";
       trans.writeToStream(stringToSend);
-      stringToGet = trans.readFromStream();
+      String stringToGet = trans.readFromStream();
       assertThat(stringToGet, equalTo(stringToSend));
     }
 

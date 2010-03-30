@@ -15,12 +15,27 @@ import java.lang.*;
 // import java.net.URL;
 public class BaseTransaction 
 {
-  public	String		url;
-  public	URLConnection	connection = null;
+  private	String		url;
+  private	URLConnection	connection = null;
 
-  public BaseTransaction(String getURL)
+  public BaseTransaction(String url)
   {
-    url	= getURL;
+    setUrl(url);
+  }
+
+  public String getUrl()
+  {
+    return url;
+  }
+
+  public void setUrl(String url)
+  {
+    this.url = url;
+  }
+
+  public URLConnection getConnection()
+  {
+    return connection;
   }
 
   public void setConnection()
@@ -37,7 +52,7 @@ public class BaseTransaction
 
     try
     {
-      connection	= urlURL.openConnection();
+      this.connection	= urlURL.openConnection();
     } 
     catch (IOException e)
     {

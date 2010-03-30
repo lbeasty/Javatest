@@ -15,23 +15,45 @@ import java.lang.*;
 // import java.net.URL;
 public class BaseRequest
 {
-  public	Hashtable	hashtable;
-  public	String		url;
-  public	String		generatedUrl;
+  private	Hashtable	hashtable;
+  private	String		url;
+  
 
-  public BaseRequest(String getURL)
+  public BaseRequest(String url)
   {
-    url		= getURL;
-    hashtable	= new Hashtable();
+    setUrl(url);
+    setHashtable();
   }
+
+  public Hashtable getHashtable()
+  {
+    return hashtable;
+  }
+
+  public void setHashtable()
+  {
+    this.hashtable	= new Hashtable();
+  }
+
+  public String getUrl()
+  {
+    return url;
+  }
+
+  public void setUrl(String url)
+  {
+    this.url	= url;
+  }
+
 
   public void addKeyValue(String getKey, String getValue)
   {
     hashtable.put( getKey, getValue );
   }
 
-  public void generateUrl()
+  public String generateUrl()
   {
+    String	generatedUrl;
     Set		s	= hashtable.entrySet();
     Iterator	it	= s.iterator();
     String	str	= "";
@@ -44,6 +66,7 @@ public class BaseRequest
       str	= str + key + "=" + value + "&";
     }
 
-    generatedUrl	= str;
+    generatedUrl	= url + str;
+    return generatedUrl;
   }
 }
