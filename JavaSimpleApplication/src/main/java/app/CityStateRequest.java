@@ -17,33 +17,58 @@ import java.lang.*;
 
 public class CityStateRequest extends BaseRequest
 {
-  public	String	city;
-  public	String	state;
-  public	String	url;
+  private	String	city;
+  private	String	state;
+  private	String	url;
 
-  public CityStateRequest(String getURL, String getCityState)
+  public CityStateRequest(String url, String citystate)
   {
 //     ArrayList arrayList = new ArrayList();
-    super(getURL);
-    url		= getURL;
+    super(url);
+    this.url		= url;
 
-    validateCityState(getCityState);    
+    setCity(citystate);
+    setState(citystate);
     addKeyValue("city", city);
     addKeyValue("state", state);
   }
 
-  public void validateCityState(String getCityState)
+  public String getUrl()
+  {
+    return url;
+  }
+
+  public void setUrl(String url)
+  {
+    this.url	= url;
+  }
+
+  public String getCity()
+  {
+    return city;
+  }
+
+  public void setCity(String citystate)
+  {
+    this.city	= validateCityState(citystate)[0];
+  }
+
+  public String getState()
+  {
+    return state;
+  }
+
+  public void setState(String citystate)
+  {
+    this.state	= validateCityState(citystate)[1];
+  }
+
+  public String [] validateCityState(String getCityState)
   {
     String [] temp	= null;
     temp		= getCityState.split(",");
-    city		= temp[0];
-    state		= temp[1];
 
-//       String s3 = "Real  How To";
-//       String [] temp = null;
-//       temp = s3.split("\\s+");
+    return temp;
 
-
-//  arrayList.add( new Integer(1) ); // adding value into ArrayList
   }
 }

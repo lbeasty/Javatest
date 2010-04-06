@@ -1,6 +1,8 @@
 package app;
 
 import static org.hamcrest.MatcherAssert.*;
+// import org.junit.Assert.*;
+
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
@@ -9,45 +11,34 @@ import org.junit.*;
 
 public class BaseTransactionTest {
 
-//   public	String		url;
-//   public	URLConnection	connection = null;
-// setConnection()
-// writeToStream(String getStringToSend)
-// readFromStream()
-
-
     @Test public void callConstructor() {
       String myURL = "http://www.google.ru";
       BaseTransaction trans = new BaseTransaction(myURL);
       assertThat(trans.getUrl(), equalTo(myURL));
     }
 
-    @Test public void setConnectionToGoogle() {
+    @Test public void setConnectionToUrl() {
       String myURL = "http://www.google.ru";
       BaseTransaction trans = new BaseTransaction(myURL);
       trans.setConnection();
-      assertThat(trans.getConnection(), equalTo(null));
-//       assertNotNull(trans.connection);
+      assertThat(trans.getConnection(), notNullValue());
     }
 
-    @Test public void writeToStreamConnection() {
-// ???
-      String myURL = "triton.towson.edu/~schmitt/server/servlet/www.informit.com/articles";
-      BaseTransaction trans = new BaseTransaction(myURL);
-      trans.setConnection();
-      String stringToSend = "string=!!!";
-      trans.writeToStream(stringToSend);
-    }
+//     @Test public void writeToStreamConnection() {
+// // ???
+//       String myURL = "triton.towson.edu/~schmitt/server/servlet/www.informit.com/articles";
+//       BaseTransaction trans = new BaseTransaction(myURL);
+//       trans.setConnection();
+//       String stringToSend = "string=!!!";
+//       trans.writeToStream(stringToSend);
+//     }
 
     @Test public void readFromStreamConnection() {
-// ???
-      String myURL = "triton.towson.edu/~schmitt/server/servlet/www.informit.com/articles";
+      String myURL = "https://services.macys.com:4443/store_locator?zipcode=94538";
       BaseTransaction trans = new BaseTransaction(myURL);
       trans.setConnection();
-      String stringToSend = "string=!!!";
-      trans.writeToStream(stringToSend);
       String stringToGet = trans.readFromStream();
-      assertThat(stringToGet, equalTo(stringToSend));
+      assertThat(stringToGet, notNullValue());
     }
 
 

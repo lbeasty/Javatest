@@ -20,7 +20,7 @@ public class BaseTransaction
 
   public BaseTransaction(String url)
   {
-    setUrl(url);
+    this.url = url;
   }
 
   public String getUrl()

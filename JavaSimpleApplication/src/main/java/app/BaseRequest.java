@@ -15,24 +15,24 @@ import java.lang.*;
 // import java.net.URL;
 public class BaseRequest
 {
-  private	Hashtable	hashtable;
-  private	String		url;
+  private	Map<String, String>	requestParams;
+  private	String			url;
   
 
   public BaseRequest(String url)
   {
-    setUrl(url);
-    setHashtable();
+    this.url		= url;
+    setRequestParams();
   }
 
-  public Hashtable getHashtable()
+  public Map<String, String> getRequestParams()
   {
-    return hashtable;
+    return requestParams;
   }
 
-  public void setHashtable()
+  public void setRequestParams()
   {
-    this.hashtable	= new Hashtable();
+    this.requestParams = new HashMap<String, String>();
   }
 
   public String getUrl()
@@ -48,21 +48,21 @@ public class BaseRequest
 
   public void addKeyValue(String getKey, String getValue)
   {
-    hashtable.put( getKey, getValue );
+    requestParams.put( getKey, getValue );
   }
 
   public String generateUrl()
   {
-    String	generatedUrl;
-    Set		s	= hashtable.entrySet();
-    Iterator	it	= s.iterator();
-    String	str	= "";
+    String				generatedUrl;
+    Set<Map.Entry<String, String>>	s	= requestParams.entrySet();
+    Iterator<Map.Entry<String, String>>	it	= s.iterator();
+    String				str	= "";
 
     while(it.hasNext())
     {
-      Map.Entry	m =(Map.Entry)it.next();
-      String	key=(String)m.getKey();
-      String	value=(String)m.getValue();
+      Map.Entry<String, String>	m =it.next();
+      String	key=m.getKey();
+      String	value=m.getValue();
       str	= str + key + "=" + value + "&";
     }
 

@@ -24,10 +24,8 @@ public class ZipRequest extends BaseRequest
   {
     super(url);
 
-    String	valZipcode	= validateZip(zipcode);
-
-    setUrl(url);
-    setZipcode(valZipcode);
+    this.url		= url;
+    setZipcode(zipcode);
     addKeyValue("zipcode", valZipcode);
   }
 
@@ -38,7 +36,7 @@ public class ZipRequest extends BaseRequest
 
   public void setZipcode(String zipcode)
   {
-    this.zipcode	= zipcode;
+    this.zipcode	= validateZip(zipcode);
   }
 
   public String getUrl()

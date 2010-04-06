@@ -52,7 +52,7 @@ public class JavaSimpleApplication
       BaseResponse	resp	= new BaseResponse(readString);
 //       Stores		values	= resp.ValidateJSONResponse();
 
-      Stores values = new Gson().fromJson(resp.response, Stores.class);
+      Stores values = new Gson().fromJson(resp.getResponse(), Stores.class);
 // Integer one = gson.fromJson("1", Integer.class);
       for (int counter = 0; counter < values.getStoreDescription().length; counter++)
       {

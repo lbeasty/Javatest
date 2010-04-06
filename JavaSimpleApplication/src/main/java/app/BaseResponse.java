@@ -17,12 +17,23 @@ import java.lang.*;
 
 public class BaseResponse
 {
-  public	String	response;
+  private	String	response;
 
-  public BaseResponse(String getResponse)
+  public BaseResponse(String response)
   {
-    response	= getResponse;
+    this.response	= response;
   }
+
+  public String getResponse()
+  {
+    return response;
+  }
+
+  public void setResponse(String response)
+  {
+    this.response = response;
+  }
+
 }
 
 
