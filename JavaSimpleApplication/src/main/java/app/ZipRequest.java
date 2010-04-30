@@ -26,7 +26,7 @@ public class ZipRequest extends BaseRequest
 
     this.url		= url;
     setZipcode(zipcode);
-    addKeyValue("zipcode", valZipcode);
+    addKeyValue("zipcode", zipcode);
   }
 
   public String getZipcode()

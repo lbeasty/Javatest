@@ -12,8 +12,8 @@ public class CityStateRequestTest {
       String cityState = "San Francisco,CA";
       CityStateRequest request = new CityStateRequest(myURL, cityState);
       assertThat(request.getUrl(), equalTo(myURL));
-      assertThat(request.getCity(), equalTo("San Francisco"));
-      assertThat(request.getState(), equalTo("CA"));
+      assertThat(request.getCity(), equalTo("san francisco"));
+      assertThat(request.getState(), equalTo("ca"));
     }
 
     @Test public void validateCityState() {

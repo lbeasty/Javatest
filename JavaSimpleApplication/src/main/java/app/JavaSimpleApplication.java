@@ -23,7 +23,7 @@ public class JavaSimpleApplication
 //     szAppName	= new String("Simple Console Application");
 //   }
 
-  public BaseTransaction parseRequest (String url, String request) 
+  public static BaseTransaction parseRequest (String url, String request) 
   {
       BaseTransaction	trans	= null;
       if (request.indexOf(",") != -1)
@@ -39,19 +39,19 @@ public class JavaSimpleApplication
       return trans;
   }
 
-  public void main(String args[])
+  public static void main(String args[])
   {
 
     try
     {
       String	stringToReverse	= URLEncoder.encode(args[1], "UTF-8");
       BaseTransaction	trans = parseRequest(args[0], args[1]);
-      
+      trans.setConnection();
       String	readString	= trans.readFromStream();
 
       BaseResponse	resp	= new BaseResponse(readString);
 //       Stores		values	= resp.ValidateJSONResponse();
-
+      
       Stores values = new Gson().fromJson(resp.getResponse(), Stores.class);
 // Integer one = gson.fromJson("1", Integer.class);
       for (int counter = 0; counter < values.getStoreDescription().length; counter++)

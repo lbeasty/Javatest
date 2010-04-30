@@ -17,7 +17,7 @@ public class JavaSimpleApplicationTest
       System.out.println(obj);
       String tmp = obj.getUrl();
 
-      assertThat(tmp, equalTo("https://services.macys.com:4443/store_locator?state=CA&city=San Francisco&"));
+      assertThat(tmp, equalTo("https://services.macys.com:4443/store_locator?state=ca&city=san francisco&"));
     }
 
 

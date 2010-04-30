@@ -66,7 +66,7 @@ public class CityStateRequest extends BaseRequest
   public String [] validateCityState(String getCityState)
   {
     String [] temp	= null;
-    temp		= getCityState.split(",");
+    temp		= getCityState.toLowerCase().split(",");
 
     return temp;
 

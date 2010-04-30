@@ -37,6 +37,8 @@ public class BaseTransactionTest {
       String myURL = "https://services.macys.com:4443/store_locator?zipcode=94538";
       BaseTransaction trans = new BaseTransaction(myURL);
       trans.setConnection();
+      System.out.println(trans.getConnection());
+      System.out.println(trans.readFromStream());
       String stringToGet = trans.readFromStream();
       assertThat(stringToGet, notNullValue());
     }
